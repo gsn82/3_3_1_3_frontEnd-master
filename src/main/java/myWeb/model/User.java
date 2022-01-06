@@ -9,10 +9,10 @@ import java.util.*;
 import static javax.persistence.CascadeType.*;
 
 @Entity
-@Table(name="user")
+@Table(name = "user")
 public class User implements UserDetails {
 
-    @ManyToMany(cascade = {MERGE},fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {MERGE}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -52,7 +52,8 @@ public class User implements UserDetails {
         this.roleSet = roleSet;
     }
 
-    public User() {}
+    public User() {
+    }
 
     public long getId() {
         return id;
@@ -66,9 +67,12 @@ public class User implements UserDetails {
         return name;
     }
 
-    public String getRole(){
-        if (this.roleSet.size() == 2) return roleSet.toArray()[0].toString().toLowerCase()+ " " + roleSet.toArray()[1].toString().toLowerCase();
-        else return roleSet.toArray()[0].toString().toLowerCase();
+    public String getRole() {
+        if (this.roleSet.size() == 2) {
+            return roleSet.toArray()[0].toString().toLowerCase() + " " + roleSet.toArray()[1].toString().toLowerCase();
+        } else {
+            return roleSet.toArray()[0].toString().toLowerCase();
+        }
     }
 
     public void setName(String name) {
@@ -107,7 +111,7 @@ public class User implements UserDetails {
         this.roleSetTemp = roleSetTemp;
     }
 
-    public String[] getRoleSetTemp(){
+    public String[] getRoleSetTemp() {
         return roleSetTemp;
     }
 

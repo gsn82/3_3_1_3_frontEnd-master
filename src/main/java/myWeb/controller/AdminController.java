@@ -23,10 +23,11 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private RoleService roleService;
+   // @Autowired
+  //  private RoleService roleService;
 
-    @GetMapping //Начальная страница админа
+    //Начальная страница админа
+    @GetMapping
     public ModelAndView allUsers() {
         User admin = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ModelAndView modelAndView = new ModelAndView();
@@ -35,43 +36,49 @@ public class AdminController {
         return modelAndView;
     }
 
-    @GetMapping(value = "/api/users") //api отображения пользователей
+    //api отображения пользователей
+    @GetMapping(value = "/api/users")
     public ResponseEntity<List<User>> apiAllUsers() {
         List<User> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/api/users/{id}") //api отображения пользователей
+    //api отображения пользователей
+    @GetMapping(value = "/api/users/{id}")
     public ResponseEntity<User> getUser(@PathVariable("id") long id){
         return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/api/users") //api создания нового пользователя
+    //api создания нового пользователя
+    @PostMapping(value = "/api/users")
     public ResponseEntity<User> create(@RequestBody User user){
-        userManipulation(user);
+        userService.updateUser(user,user.getRoleSetTemp());
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PutMapping("/api/users") //api редактирования
+    //api редактирования
+    @PutMapping("/api/users")
     public ResponseEntity<User> edit(@RequestBody User user){
-        userManipulation(user);
+        userService.updateUser(user,user.getRoleSetTemp());
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    private void userManipulation(User user) { //функция где должны вставляться роли пользователю и где сохраняется пользователь
+    //функция где должны вставляться роли пользователю и где сохраняется пользователь
+  /*  private void userManipulation(User user) {
         Set<Role> roleSet = new HashSet<>();
-
         // все роли
-        for (int i = 0; i < user.getRoleSetTemp().length; i++) {
-            roleSet.add(roleService.getAuthByName(user.getRoleSetTemp()[i]));
-        }/**/
+
+
+        for (String role : user.getRoleSetTemp()) {
+            roleSet.add(roleService.getAuthByName(role));
+        }
 
         user.setRoleSet(roleSet);
-        System.out.println(user);
         userService.saveUser(user);
-    }
+    }/**/
 
-    @DeleteMapping(value = "/api/users/{id}") //api удаления
+    //api удаления
+    @DeleteMapping(value = "/api/users/{id}")
     public ResponseEntity deleteUser(@PathVariable("id") Long id){
         userService.deleteUser(userService.getUserById(id));
         return new ResponseEntity(HttpStatus.OK);
